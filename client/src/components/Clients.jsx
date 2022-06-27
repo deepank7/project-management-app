@@ -1,17 +1,18 @@
-import { useQuery } from "@apollo/client";
-import { GET_CLIENTS } from "../queries/clientQueries";
-import LoadingSpinner from "./LoadingSpinner";
+import { useQuery } from '@apollo/client';
+import ClientRow from './ClientRow';
+import Spinner from './LoadingSpinner';
+import { GET_CLIENTS } from '../queries/clientQueries';
 
-const Clients = () => {
+export default function Clients() {
   const { loading, error, data } = useQuery(GET_CLIENTS);
 
-  if (loading) return <LoadingSpinner />
-  if (error) return "Error received";
+  if (loading) return <Spinner />;
+  if (error) return <p>Something Went Wrong</p>;
 
   return (
     <>
       {!loading && !error && (
-        <table className="table table-hover mt-3">
+        <table className='table table-hover mt-3'>
           <thead>
             <tr>
               <th>Name</th>
@@ -21,21 +22,12 @@ const Clients = () => {
             </tr>
           </thead>
           <tbody>
-            {data?.clients?.map((client) => (
-              <tr key={client.id}>
-                <td>{client.name}</td>
-                <td>{client.email}</td>
-                <td>{client.phone}</td>
-                <td>
-                  <button className="btn btn-danger">Delete</button>
-                </td>
-              </tr>
+            {data.clients.map((client) => (
+              <ClientRow key={client.id} client={client} />
             ))}
           </tbody>
         </table>
       )}
     </>
   );
-};
-
-export default Clients;
+}
